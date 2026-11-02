@@ -1,0 +1,14 @@
+.venv/
+.git/
+.github/
+__pycache__/
+.pytest_cache/
+.vscode/
+.env
+.env.*
+*.log
+evidence/
+docs/
+tests/
+requirements-dev.txt
+*.pyc
