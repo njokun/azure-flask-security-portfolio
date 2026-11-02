@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Azure Security Lab</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Azure Security Lab</h1>
+        <p>Flask Web Application Security Reconstruction</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>About This Project</h2>
+            <p>
+                This application is a 2026 reconstruction of a
+                cybersecurity bootcamp cloud application project.
+                It will be progressively secured, tested,
+                and documented.
+            </p>
+        </section>
+
+        <section>
+            <h2>Security Articles</h2>
+            {% for post in posts %}
+                <article class="card">
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.summary }}</p>
+                    <a href="{{ url_for('post_detail', slug=post.slug) }}">
+                        Read article
+                    </a>
+                </article>
+            {% endfor %}
+        </section>
+    </main>
+
+    <footer>
+        <p>Cloud Security Reconstruction | 2026</p>
+    </footer>
+</body>
+</html>
