@@ -1,8 +1,6 @@
-﻿docker : touch: /app/security-test.txt: Read-only file system
+docker : touch: /app/security-test.txt: Read-only file system
 At line:1 char:1
 + docker exec flask-security-hardened sh -c 'touch /app/security-test.t ...
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (touch: /app/sec...nly file system:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
- 
-
