@@ -470,3 +470,54 @@ These are control-alignment references, not claims of full framework compliance 
 - `3ad6da7` — Add automated container scanning and Docker Scout evidence.
 
 **Overall Phase 5 status:** Local testing and assessment completed; automated CI/CD execution and vulnerability remediation remain outstanding.
+
+
+
+## Phase 6 — Repository Security and CI/CD Supply-Chain Hardening
+
+**Assessment date:** November 3, 2026
+
+### 1. Git History Secret Scanning
+
+**Tool:** Gitleaks v8.24.3
+
+A repository secret scan was performed using the Gitleaks Docker image.
+
+**Validation results:**
+
+- Git commits scanned: 10
+- Data scanned: approximately 106.15 KB
+- Secrets detected: 0
+- Scanner exit code: 0
+
+**Assessment result:** Passed — no secrets detected in the scanned Git history.
+
+**Limitation:** Automated secret scanning does not guarantee that every possible credential or sensitive value has been identified.
+
+### 2. GitHub Actions Supply-Chain Hardening
+
+The GitHub Actions workflow was updated to strengthen CI/CD security.
+
+**Controls implemented:**
+
+- Pinned all seven GitHub Action references to full commit SHAs.
+- Disabled checkout credential persistence in all three jobs.
+- Retained read-only repository permissions.
+- Preserved automated application testing, dependency auditing, and container vulnerability scanning.
+
+**Validation:**
+
+- Git diff whitespace validation passed.
+- Three `persist-credentials: false` settings confirmed.
+- Changes committed successfully.
+
+**Git commit:** `188a8da` — Harden GitHub Actions with pinned SHAs and restricted credentials.
+
+**Status:** Configuration hardening completed locally. GitHub-hosted workflow execution remains pending.
+
+### 3. Remaining Security Risks
+
+- SEC-003 remains open with 11 reported container-image vulnerabilities.
+- GitHub Actions execution has not yet been validated on hosted runners.
+- Trivy currently operates in report-only mode.
+- No production deployment approval or formal acceptance of outstanding vulnerabilities has been granted.
