@@ -248,3 +248,53 @@ The remaining risks have not been accepted or classified as false positives.
 - `evidence/alpine-nonroot-user.txt`
 
 **Final assessment status:** Open — The Alpine alternative has been validated as a mitigation, but outstanding vulnerabilities require further investigation and treatment before the finding can be closed.
+
+
+
+### Finding SEC-004: Container Runtime Hardening
+
+**Assessment date:** November 3, 2026
+
+**Status:** Implemented — Configuration and functional validation completed
+
+**Assessment target:** `flask-security-hardened`
+
+**Risk identified:**
+
+Default container configurations may permit unnecessary filesystem modifications, excessive privileges, or unrestricted resource consumption. These conditions could increase the impact of an application compromise.
+
+**Security controls implemented:**
+
+- Read-only root filesystem to prevent unauthorized modifications.
+- Dropped all Linux capabilities to reduce available privileges.
+- Enabled `no-new-privileges` to prevent processes from gaining additional privileges through execution.
+- Restricted application execution to non-root UID 10001.
+- Configured a maximum of 100 processes.
+- Configured a 256 MiB memory limit and one CPU limit.
+- Configured a 16 MiB temporary filesystem with `noexec` and `nosuid` restrictions.
+
+**Validation performed:**
+
+1. Inspected Docker HostConfig to verify the configured runtime restrictions.
+2. Executed the `id` command inside the running container, confirming UID 10001.
+3. Attempted to create `/app/security-test.txt` within the container.
+4. Confirmed the write attempt failed with the message `Read-only file system`.
+5. Previously confirmed the hardened container returned HTTP 200 and retained the application's security headers.
+
+**Assessment conclusion:**
+
+The container successfully demonstrated non-root execution, configured privilege restrictions, and read-only filesystem enforcement.
+
+Resource limits were verified through configuration inspection but have not been independently stress-tested.
+
+These controls reduce the potential impact of application compromise but do not eliminate vulnerabilities identified in the underlying container image.
+
+**Evidence:**
+
+- `evidence/runtime-security-config.txt`
+- `evidence/runtime-user-verification.txt`
+- `evidence/runtime-readonly-test.txt`
+
+**Residual risk:**
+
+Outstanding container-image vulnerabilities remain documented under SEC-003. Additional security testing and vulnerability reassessment are required before production deployment.

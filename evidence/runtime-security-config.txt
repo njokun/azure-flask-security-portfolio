@@ -1,0 +1,13 @@
+﻿
+
+ReadonlyRootfs : True
+CapDrop        : {ALL}
+SecurityOpt    : {no-new-privileges:true}
+PidsLimit      : 100
+Memory         : 268435456
+NanoCpus       : 1000000000
+Tmpfs          : @{/tmp=rw,noexec,nosuid,size=16m}
+
+
+
+
