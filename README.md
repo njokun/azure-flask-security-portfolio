@@ -73,7 +73,13 @@ A subsequent assessment on November 3, 2026, identified 11 findings in the Alpin
 
 Affected packages included `msgpack`, `urllib3`, `setuptools`, `sqlite`, and `musl`.
 
-Further investigation is required to determine runtime applicability, patch availability, and appropriate risk treatment.
+Further investigation evaluated an experimental Alpine runtime image with pip removed after dependency installation. Docker Scout reported 3 vulnerabilities in the experimental image, compared with 12 in its corresponding upstream base image. The remaining findings involved `zlib` (critical), `musl` (high), and `sqlite` (high).
+
+This was an experimental mitigation assessment, not an approved replacement for the validated application image. Full application regression testing of the experimental image remains outstanding.
+
+The Trivy report from the verified GitHub Actions run contained 8 findings: 5 high, 2 medium, and 1 low. Differences between scanner results and assessment dates are documented in the full security report.
+
+Further investigation and risk treatment remain necessary before any production deployment.
 
 **Status:** Open — mitigation implemented, residual vulnerabilities unresolved.
 
@@ -151,7 +157,7 @@ The workflow also includes:
 - SARIF vulnerability-report generation
 - Upload of the Trivy report as a workflow artifact
 
-**CI status:** Workflow configured and committed; execution on GitHub-hosted runners pending.
+**CI status:** Verified on GitHub-hosted runners. All three jobs passed in [GitHub Actions run #1](https://github.com/njokun/azure-flask-security-portfolio/actions/runs/41721781116). The Trivy scan operates in report-only mode and does not block the workflow on vulnerability findings.
 
 The Trivy job currently uses `exit-code: '0'`, meaning vulnerability findings are reported without automatically failing the workflow.
 
@@ -200,13 +206,13 @@ Supporting assessment artifacts are stored in the [`evidence/`](evidence/) direc
 - No cloud identity integration or centralized security logging
 - Outstanding container-image vulnerabilities
 - No production security approval
-- GitHub-hosted CI execution not yet validated
+- GitHub-hosted CI execution verified; container vulnerability reporting remains non-blocking
 - Automated vulnerability reporting is not currently configured as an enforcement gate
 
 ## Next Steps
 
-1. Publish the repository and validate the GitHub Actions workflow.
-2. Review the generated Trivy SARIF artifact.
+1. Monitor GitHub Actions execution and review future security scan results.
+2. Reassess outstanding vulnerabilities when updated packages or base images become available.
 3. Investigate and prioritize unresolved container vulnerabilities.
 4. Rebuild, retest, and rescan after approved updates.
 5. Document remediation and residual-risk decisions.

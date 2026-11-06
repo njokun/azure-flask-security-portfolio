@@ -576,3 +576,36 @@ Runtime dependency minimization demonstrated a reduction in reported Python-pack
 No additional exploratory base-image comparisons are required for completion of this portfolio assessment.
 
 **SEC-003 status: OPEN.** The remaining vulnerabilities require appropriate treatment and reassessment before any production deployment approval.
+
+## Phase 8 — GitHub Actions Execution Verification
+
+**Verification date:** November 2026
+
+**GitHub Actions run:** https://github.com/njokun/azure-flask-security-portfolio/actions/runs/41721781116
+
+**Commit tested:** 773721f
+
+### Hosted CI/CD Results
+
+| Job | Result |
+|---|---|
+| test | Passed |
+| dependency-audit | Passed |
+| container-scan | Passed (report-only) |
+
+All three jobs completed successfully on GitHub-hosted runners.
+
+The container-scan job generated a downloadable vulnerability-report artifact named `container-vulnerability-report`.
+
+The Trivy SARIF report was reviewed and contained eight findings:
+
+- Critical: 0
+- High: 5
+- Medium: 2
+- Low: 1
+
+The Trivy scan was configured with `exit-code: '0'`. Consequently, a successful workflow does not indicate that all reported vulnerabilities have been remediated.
+
+**Assessment conclusion:** GitHub-hosted CI/CD execution has been verified. Automated application testing, dependency auditing, and container vulnerability reporting are operational.
+
+**Residual risk:** SEC-003 remains open. Vulnerability remediation and production deployment approval remain outside the completed CI/CD verification scope.
