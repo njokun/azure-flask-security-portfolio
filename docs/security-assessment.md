@@ -521,3 +521,58 @@ The GitHub Actions workflow was updated to strengthen CI/CD security.
 - GitHub Actions execution has not yet been validated on hosted runners.
 - Trivy currently operates in report-only mode.
 - No production deployment approval or formal acceptance of outstanding vulnerabilities has been granted.
+
+#### 8. Experimental Runtime Dependency Minimization — November 2026
+
+**Objective:** Investigate whether removing unnecessary Python package-management tooling from the runtime container reduces reported vulnerabilities.
+
+**Method:**
+
+- Preserved the original Dockerfile.
+- Created a separate experimental Dockerfile.
+- Installed application dependencies before uninstalling pip.
+- Built the experimental image as `flask-security:no-pip`.
+- Compared Docker Scout results with the corresponding upstream Python Alpine base image.
+- Inspected installed system packages and verified the SQLite runtime version.
+
+**Scan comparison:**
+
+| Image | Critical | High | Medium | Low | Total |
+|---|---:|---:|---:|---:|---:|
+| Earlier Alpine application reassessment | 0 | 7 | 2 | 1 | 11* |
+| Newer Alpine base image | 1 | 8 | 2 | 1 | 12 |
+| Experimental application image without pip | 1 | 2 | 0 | 0 | 3 |
+
+*The earlier Alpine assessment also reported one finding with unspecified severity.
+
+The newer base image and experimental image used the same upstream base-image digest. The experimental image had nine fewer reported findings, corresponding to `msgpack`, `urllib3`, and `setuptools`.
+
+Inspection of the earlier runtime image identified pip-vendored copies of `msgpack` and `urllib3`. Removing pip from the experimental runtime image was associated with the absence of these Python-package findings in the subsequent Docker Scout report.
+
+**Remaining findings:**
+
+| Component | Severity | Reported vulnerability | Treatment status |
+|---|---|---|---|
+| zlib 1.3.2-r1 | Critical | CVE-2026-4738 | Open; fixed version 1.4-r0 reported |
+| musl 1.2.6-r3 | High | CVE-2026-107891 | Open; fixed version 1.2.6-r6 reported |
+| SQLite 3.53.4 | High | CVE-2026-119586 | Open; no fixed version reported |
+
+Python's SQLite runtime version was independently confirmed as 3.53.4.
+
+A repository package-update check did not identify available upgrades in the experimental container at the time of testing.
+
+**Limitations:**
+
+- The experimental image has not completed full application functionality and security regression testing.
+- A lower vulnerability count does not independently establish lower exploitability or production readiness.
+- Scanner results depend on the image contents, vulnerability database, and assessment date.
+- The experimental Dockerfile has not been adopted as the approved application build.
+- Vulnerability remediation and formal risk acceptance remain outstanding.
+
+**Assessment conclusion:**
+
+Runtime dependency minimization demonstrated a reduction in reported Python-package vulnerabilities. The experiment is retained as supporting evidence of vulnerability investigation and mitigation evaluation.
+
+No additional exploratory base-image comparisons are required for completion of this portfolio assessment.
+
+**SEC-003 status: OPEN.** The remaining vulnerabilities require appropriate treatment and reassessment before any production deployment approval.
